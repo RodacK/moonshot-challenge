@@ -10,7 +10,7 @@
 
 2.1. En su terminal correr
 
-    ./ run.sh
+    /bin/bash run.sh
 
 Nota: este se encargará de descargar y configurar las imagenes y contenedores necesarios.
 Tambien de migrar los script para la bd, configurar el cliente soap y levantar nuestra app
