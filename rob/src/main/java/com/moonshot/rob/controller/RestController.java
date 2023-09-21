@@ -24,6 +24,10 @@ public class RestController {
 
     @PostMapping("/employee/add")
     public ResponseEntity<CreateEmployeeResponse> createEmployee(@RequestBody CreateEmployeeRequest request) throws BadRequestException {
+        /**
+         * 200 when an object is created and returned
+         * 201 when an object is created but only its reference is returned (such as an ID or a link)
+         */
         return ResponseEntity.ok(service.createEmployee(request));
     }
 

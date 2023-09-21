@@ -21,7 +21,7 @@ public class ControllerAdvisor {
     public ResponseEntity handleDataAccessException(DataAccessException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("message", String.format("Database Error: %s", ex.getMessage()));
+        body.put("message", "Internal Error: Tenemos problemas en nuestras dependencias. Comuniquese con un admin");
         log.error(ex.getMessage());
         return new ResponseEntity(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -30,7 +30,7 @@ public class ControllerAdvisor {
     public ResponseEntity handleConnectException(ConnectException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("message", "External Services Error: Tenemos dependencias faltantes, comuniquese con un admin");
+        body.put("message", "External Services Error: Tenemos problemas en nuestras dependencias. Comuniquese con un admin");
         log.error(ex.getMessage());
         return new ResponseEntity(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -39,7 +39,7 @@ public class ControllerAdvisor {
     public ResponseEntity handleIllegalStateException(IllegalStateException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("message", "Internal Error: Comuniquese con un admin");
+        body.put("message", "Internal Error CODE 1: Comuniquese con un admin");
         log.error(ex.getMessage());
         return new ResponseEntity(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -48,7 +48,7 @@ public class ControllerAdvisor {
     public ResponseEntity handleWebServiceClientException(WebServiceClientException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("message", "Internal Error: Comuniquese con un admin");
+        body.put("message", "Internal Error CODE 2: Comuniquese con un admin");
         log.error(ex.getMessage());
         return new ResponseEntity(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }

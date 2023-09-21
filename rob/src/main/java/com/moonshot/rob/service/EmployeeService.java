@@ -45,7 +45,6 @@ public class EmployeeService {
             addRequest.setArg1(1000);
             ObjectFactory objectFactory = new ObjectFactory();
             toSave.setSalary(soapClient.add(objectFactory.createAdd(addRequest)).getReturn());
-            System.out.println("----------------"+toSave.getSalary());
             return EmployeesMapper.MAPPER.toCreateResponse(repository.save(toSave));
         } else {
             throw new BadRequestException(violations.stream().map(a -> a.getPropertyPath()+" : "+a.getMessage()).collect(Collectors.toList()).toString());
