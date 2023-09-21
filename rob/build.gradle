@@ -1,0 +1,50 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.1.3'
+	id 'io.spring.dependency-management' version '1.1.3'
+	id("com.github.bjornvester.wsdl2java") version "2.0.2"
+}
+
+group = 'com.moonshot'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+	implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '8.0.1.Final'
+	implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.22.1'
+	runtimeOnly group: 'org.flywaydb', name: 'flyway-database-oracle', version: '9.22.1'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+wsdl2java {
+	wsdlDir.set(layout.projectDirectory.dir("src/main/resources/static"))
+	markGenerated.set(true)
+	packageName.set("com.moonshot.rob.model.wsdl")
+	generatedSourceDir.set(layout.projectDirectory.dir("src/main/java/com/moonshot/rob/model/wsdl"))
+}

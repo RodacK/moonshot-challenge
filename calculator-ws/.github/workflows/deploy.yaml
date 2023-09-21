@@ -1,0 +1,68 @@
+#
+# JBoss, Home of Professional Open Source
+# Copyright 2015, Red Hat, Inc. and/or its affiliates, and individual
+# contributors by the @authors tag. See the copyright.txt in the
+# distribution for a full listing of individual contributors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: Build and Push Image
+on:
+  push:
+    branches:
+    - "[0-9]+.[0-9]+"
+
+jobs:
+  build:
+    name: Build and push image
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: 11
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: mvn clean package -ntp
+      run: |
+          ./mvnw clean package -ntp
+
+    - name: Build Image
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: calculator-ws
+        tags: ${{ github.ref_name }}
+        archs: amd64, arm64
+        containerfiles: |
+          ./Dockerfile
+
+    # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
+    # in which case 'username' and 'password' can be omitted.
+    - name: Push to quay.io
+      id: push-to-quay
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.build-image.outputs.image }}
+        tags: ${{ steps.build-image.outputs.tags }}
+        registry: quay.io/l2x6
+        username: ppalaga
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    - name: Print image url
+      run: echo "Image pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
