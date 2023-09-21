@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
-    @Autowired
     private EmployeeService service;
+
+    public RestController(EmployeeService service) {
+        this.service = service;
+    }
 
     @PostMapping("/employee/add")
     public ResponseEntity<CreateEmployeeResponse> createEmployee(@RequestBody CreateEmployeeRequest request) throws BadRequestException {

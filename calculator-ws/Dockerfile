@@ -16,9 +16,9 @@
 #
 
 FROM quay.io/wildfly/wildfly
-#COPY target/server /opt/jboss/wildfly
+COPY target/server /opt/jboss/wildfly
 # While building the calculator-ws module locally, it will set local file handler for logging
-RUN sed -i "s#handler\.FILE\.fileName=.*#handler.FILE.fileName=/opt/jboss/wildfly/standalone/log/server.log#g" /opt/jboss/wildfly/standalone/configuration/logging.properties
+#RUN sed -i "s#handler\.FILE\.fileName=.*#handler.FILE.fileName=/opt/jboss/wildfly/standalone/log/server.log#g" /opt/jboss/wildfly/standalone/configuration/logging.properties
 
 # Ensure signals are forwarded to the JVM process correctly for graceful shutdown
 ENV LAUNCH_JBOSS_IN_BACKGROUND true

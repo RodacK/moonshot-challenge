@@ -1,5 +1,6 @@
 package com.moonshot.rob.service;
 
+import com.moonshot.rob.configs.SoapClient;
 import com.moonshot.rob.model.CreateEmployeeRequest;
 import com.moonshot.rob.model.CreateEmployeeResponse;
 import com.moonshot.rob.model.Employee;
@@ -13,24 +14,23 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
 
-    @Autowired
     private EmployeesRepository repository;
     private ValidatorFactory factory;
-
-    @Autowired
     private SoapClient soapClient;
 
     //also we can inject the dependencies via constructor
-    EmployeeService() {
+    EmployeeService(EmployeesRepository repository, SoapClient soapClient) {
+        this.repository = repository;
+        this.soapClient = soapClient;
         factory = Validation.buildDefaultValidatorFactory();
     }
 
@@ -48,7 +48,7 @@ public class EmployeeService {
             System.out.println("----------------"+toSave.getSalary());
             return EmployeesMapper.MAPPER.toCreateResponse(repository.save(toSave));
         } else {
-            throw new BadRequestException(violations.toString());
+            throw new BadRequestException(violations.stream().map(a -> a.getPropertyPath()+" : "+a.getMessage()).collect(Collectors.toList()).toString());
         }
     }
 
